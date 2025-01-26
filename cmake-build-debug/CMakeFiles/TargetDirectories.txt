@@ -1,0 +1,3 @@
+/Users/leonardo/Documents/dev/Physics-2D/cmake-build-debug/CMakeFiles/Physics-2D.dir
+/Users/leonardo/Documents/dev/Physics-2D/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/leonardo/Documents/dev/Physics-2D/cmake-build-debug/CMakeFiles/rebuild_cache.dir
