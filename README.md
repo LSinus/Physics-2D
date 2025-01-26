@@ -22,5 +22,5 @@ This project includes a basic CMakeList.txt. Run the following commands to build
  make
 
  # Run the program
- ./grader
+ ./Physics-2D
  ```
