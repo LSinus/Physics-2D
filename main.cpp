@@ -1,19 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include "physicsWorld.h"
-#include "solver.h"
-#include <sstream>
 
 
-void createObject(PhysicsWorld* world, float radius, float x, float y, std::vector<sf::CircleShape*>* shapes) {
-    PhysicsObject* obj = new PhysicsObject(radius, x, y);
-    sf::CircleShape* shape = new sf::CircleShape(radius);
+
+void createObject(PhysicsWorld& world, float radius, float x, float y, std::vector<std::unique_ptr<sf::CircleShape>>& shapes) {
+    // Create physics object
+    auto physicsObj = std::make_unique<PhysicsObject>(radius, x, y);
+
+    // Create graphics object
+    auto shape = std::make_unique<sf::CircleShape>(radius);
     shape->setFillColor(sf::Color::White);
     shape->setOrigin(shape->getRadius(), shape->getRadius());
     shape->setPosition(x, y);
 
-    world->addObject(obj);
-    shapes->push_back(shape);
-
+    // Add to world and shapes vector
+    world.addObject(std::move(physicsObj));
+    shapes.push_back(std::move(shape));
 }
 
 int main()
@@ -21,24 +23,14 @@ int main()
     // create the window (remember: it's safer to create it in the main thread due to OS limitations)
     sf::RenderWindow window(sf::VideoMode({800, 700}), "Physics-2D");
 
-    sf::Font font;
-
-
-    sf::Text fpsText;
-    fpsText.setFont(font);
-    fpsText.setCharacterSize(200);
-    fpsText.setFillColor(sf::Color::White);
-    fpsText.setPosition(10.f, 10.f);
-
     sf::Clock clock;
     sf::Time deltaTime;
     float frameTime;
     float fps = 0.f;
 
-    std::vector<sf::CircleShape*> shapes;
+    std::vector<std::unique_ptr<sf::CircleShape>> shapes;
 
-    Solver solver;
-    PhysicsWorld world(solver);
+    PhysicsWorld world;
     window.setFramerateLimit(60);
 
     sf::CircleShape bg(300.f);
@@ -52,13 +44,12 @@ int main()
         deltaTime = clock.restart();
         frameTime = deltaTime.asSeconds();
 
-        fps = 1.f / frameTime;
-        std::stringstream ss;
-        ss << "FPS: " << static_cast<int>(fps);
-        fpsText.setString(ss.str());
-
+        const auto& world_objects = world.getObjects();
         for (int i = 0; i < shapes.size(); i++) {
-            shapes[i]->setPosition(sf::Vector2f(world.objects[i]->position_current.x, world.objects[i]->position_current.y));
+            shapes[i]->setPosition(sf::Vector2f(
+                world_objects[i]->getPosition().x,
+                world_objects[i]->getPosition().y
+            ));
         }
 
 
@@ -70,12 +61,11 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
-                createObject(&world, 30.f, 250.f, 300.f, &shapes);
+                createObject(world, 30.f, 250.f, 300.f, shapes);
             }
         }
 
         window.clear(sf::Color::Black);
-        window.draw(fpsText);
         window.draw(bg);
 
         for (int i = 0; i < shapes.size(); i++) {

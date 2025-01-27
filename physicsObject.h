@@ -9,29 +9,44 @@
 class PhysicsObject {
 public:
 
-    PhysicsObject(float radius, float x, float y) : radius(radius) {
-        position_current = Vec2(x, y);
-        position_old = position_current;
+    PhysicsObject(float radius, float x, float y, bool isStatic = false) : radius(radius) {
+        currentPosition = Vec2(x, y);
+        oldPosition = currentPosition;
         acceleration = Vec2(0, 0);
     }
 
-    void step(float dt) {
-        const Vec2 velocity = position_current - position_old;
-        position_old = position_current;
-        position_current = position_current + velocity + acceleration * dt * dt;
+    void update(const float dt) {
+        const Vec2 velocity = currentPosition - oldPosition;
+        oldPosition = currentPosition;
+        currentPosition = currentPosition + velocity + acceleration * dt * dt;
         acceleration = {};
     }
 
-    void accelerate(Vec2 acc) {
+    void accelerate(const Vec2& acc) {
         acceleration += acc;
     }
 
+    const Vec2& getPosition() const { return currentPosition; }
+    float getRadius() const { return radius; }
+
+    void setPosition(const Vec2& newPosition) {
+        if (!isStatic) {
+            currentPosition = newPosition;
+        }
+    }
+
+    void move(const Vec2& delta) {
+        if (!isStatic) {
+            currentPosition = currentPosition + delta;
+        }
+    }
 
 
-public:
-    Vec2 position_current;
-    Vec2 position_old;
+private:
+    Vec2 currentPosition;
+    Vec2 oldPosition;
     Vec2 acceleration;
+    bool isStatic;
     float radius;
 };
 

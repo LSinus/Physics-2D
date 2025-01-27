@@ -8,22 +8,29 @@
 #include <vector>
 
 #include "physicsObject.h"
-#include "solver.h"
 
 class PhysicsWorld {
 public:
-    PhysicsWorld(Solver& solver) : m_solver(solver) { // <-- Usa una reference
-        m_solver.bindWorld(&objects);
-    };
-    void addObject(PhysicsObject* object) {
-        objects.push_back(object);
-    };
-    void update(float dt) {
-        m_solver.update(dt);
-    };
+    PhysicsWorld() {
 
-    std::vector<PhysicsObject*> objects;
+    };
+    void addObject(std::unique_ptr<PhysicsObject> object) {
+        objects.push_back(std::move(object));
+    }
+
+    void update(float dt);
+
+    const std::vector<std::unique_ptr<PhysicsObject>>& getObjects() const {
+        return objects;
+    }
+
 private:
-    Solver m_solver;
+    void applyGravity();
+    void updatePositions(float dt);
+    void applyConstraints();
+    void solveCollisions();
+
+    std::vector<std::unique_ptr<PhysicsObject>> objects;
+    Vec2 gravity = {0.0f, 1000.0f};
 };
 #endif //PHYSICSWORLD_H

@@ -22,10 +22,12 @@ struct Vec2 {
     Vec2 operator*(float scalar) const { return Vec2(x * scalar, y * scalar); }
     Vec2 operator/(float scalar) const { return Vec2(x / scalar, y / scalar); }
 
-    float Dot(const Vec2& other) const { return x * other.x + y * other.y; }
-    float Length() const { return std::sqrt(x*x + y*y); }
-    Vec2 Normalized() const { 
-        float len = Length(); 
+    Vec2 operator-() const { return Vec2(-x, -y); }
+
+    float dot(const Vec2& other) const { return x * other.x + y * other.y; }
+    float length() const { return std::sqrt(x*x + y*y); }
+    Vec2 normalized() const {
+        float len = length();
         return len > 0 ? (*this)*(1.0f/len) : *this;
     }
 };
