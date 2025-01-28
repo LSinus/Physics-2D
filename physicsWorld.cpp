@@ -71,8 +71,11 @@ void PhysicsWorld::solveCollisions() {
 
 
 void PhysicsWorld::update(float dt) {
-    applyGravity();
-    updatePositions(dt);
-    applyConstraints();
-    solveCollisions();
+        applyGravity();
+        updatePositions(dt);
+        applyConstraints();
+    for (int i = 0; i < 8; i++) {
+        solveCollisions();
+    }
+
 }

@@ -2,6 +2,7 @@
 
 A simple 2D physics simulation demonstrating rigid body dynamics, collision resolution, and energy conservation, built with C++ and SFML.
 
+First of all, follow the build instructions and then press the space bar in order to enjoy physics!
 
 ## Build Instructions
 This project includes a basic CMakeList.txt. Run the following commands to build, make, and run the program.
