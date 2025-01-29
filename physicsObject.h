@@ -9,7 +9,7 @@
 class PhysicsObject {
 public:
 
-    PhysicsObject(float radius, float x, float y, bool isStatic = false) : radius(radius), isStatic(isStatic) {
+    PhysicsObject(const float radius, const float x, const float y, const bool isStatic = false) : isStatic(isStatic), radius(radius) {
         currentPosition = Vec2(x, y);
         oldPosition = currentPosition;
         acceleration = Vec2(0, 0);
@@ -21,11 +21,17 @@ public:
         oldPosition = currentPosition;
         currentPosition = currentPosition + velocity + acceleration * dt * dt;
         acceleration = {};
+
+        float v = velocity.length()/dt;
+
+        kineticEnergy = 0.5f * v * v;
     }
 
     void accelerate(const Vec2& acc) {
         if (isStatic) return;
         acceleration += acc;
+
+        potentialEnergy = (-acceleration).length() * currentPosition.y;
     }
 
     const Vec2& getPosition() const { return currentPosition; }
@@ -43,8 +49,13 @@ public:
         }
     }
 
+    float getPotentialEnergy() const { return potentialEnergy; }
+    float getKineticEnergy() const { return kineticEnergy; }
+
 
 private:
+    float kineticEnergy = 0;
+    float potentialEnergy = 0;
     Vec2 currentPosition;
     Vec2 oldPosition;
     Vec2 acceleration;

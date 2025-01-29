@@ -5,9 +5,13 @@
 #include "physicsWorld.h"
 
 void PhysicsWorld::updatePositions(float dt) {
+
         for (auto& obj : objects) {
             obj->update(dt);
+            energy += obj->getKineticEnergy();
+            energy += obj->getPotentialEnergy();
         }
+
 }
 
 void PhysicsWorld::applyGravity() {
@@ -71,11 +75,15 @@ void PhysicsWorld::solveCollisions() {
 
 
 void PhysicsWorld::update(float dt) {
-        applyGravity();
-        updatePositions(dt);
-        applyConstraints();
+    energy = 0.0f;
+    applyGravity();
+    updatePositions(dt);
+    applyConstraints();
+
     for (int i = 0; i < 8; i++) {
+        for (auto& link : links) {
+            link->solve();
+        }
         solveCollisions();
     }
-
 }
