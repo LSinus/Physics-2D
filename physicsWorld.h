@@ -11,6 +11,11 @@
 
 class PhysicsWorld {
 public:
+    void reset() {
+        objects.clear();
+        links.clear();
+    }
+
     void addObject(std::shared_ptr<PhysicsObject> object) {
         objects.push_back(std::move(object));
     }
