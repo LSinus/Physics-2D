@@ -84,7 +84,9 @@ int main(){
 
         }
 
-        ImGui::NewFrame();
+        ImGui::SFML::Update(window, deltaClock.restart());
+
+
         ImGui::Begin("Info");
         ImGui::Text("FPS: %f", 1/frameTime);
         ImGui::Text("Objects: %d", world.getObjects().size());
